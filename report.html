@@ -1,0 +1,37 @@
+<!-- Report Page -->
+<section class="p-4 space-y-4" id="page-report">
+  <!-- 公告栏 -->
+  <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded-lg mb-2">
+    <div class="flex items-start">
+      <span class="iconify text-amber-600 text-lg mr-2 mt-0.5" data-icon="heroicons:information-circle"></span>
+      <div class="flex-1 text-xs text-amber-800 leading-relaxed">
+        <div class="font-semibold mb-1.5">使用须知：</div>
+        <div class="space-y-1.5">
+          <div>1. 使用前请先在 <span class="font-semibold">我的-个人信息维护</span> 完善个人信息。</div>
+          <div>2. <span class="font-semibold">个人信息提交成功后系统将返回唯一凭据，请妥善保存。</span>个人信息已维护，请忽略该条提醒。</div>
+          <div>3. 如有使用疑问，可通过 <span class="font-semibold">我的-使用反馈</span> 或 <span class="font-semibold">我的-微信沟通群</span> 反馈。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 查询模块 -->
+  <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-100">
+    <div class="flex items-center gap-2">
+      <div class="flex-1 flex items-center bg-slate-100 rounded-lg px-3 py-2">
+        <span class="iconify text-slate-400 mr-2" data-icon="heroicons:magnifying-glass"></span>
+        <input id="search-input-report" class="bg-transparent border-none outline-none text-sm w-full" placeholder="输入应用名称查询..." type="text" oninput="filterFunctions('report', this.value)"/>
+      </div>
+      <button onclick="resetSearch('report')" id="reset-btn-report" class="px-3 py-2 bg-slate-200 text-slate-600 rounded-lg text-xs font-medium hidden hover:bg-slate-300 transition-colors">
+        重置
+      </button>
+    </div>
+  </div>
+  <div id="functions-container-report" class="grid grid-cols-2 gap-4 max-w-sm mx-auto">
+    <div class="function-item flex flex-col items-center group cursor-pointer" data-name="吹哨人问题上报" onclick="navigateToPage('https://nocode.pipechina.com.cn/f/696cb30138be092ab4dcf4da?embed=true')">
+      <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mb-2 group-active:scale-90 transition-transform">
+        <span class="iconify text-orange-600 text-2xl" data-icon="heroicons:pencil-square"></span>
+      </div>
+      <span class="text-xs text-slate-600 text-center">吹哨人问题上报</span>
+    </div>
+  </div>
+</section>

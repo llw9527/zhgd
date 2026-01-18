@@ -1,95 +1,407 @@
+
 <!DOCTYPE html>
+
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>简道云填报统一入口</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: "Microsoft Yahei", sans-serif;
-            background-color: #f5f7fa;
-            padding: 2rem 1rem; /* 优化移动端内边距 */
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            color: #2f54eb;
-            margin-bottom: 2.5rem;
-            font-weight: 600;
-            font-size: 1.8rem; /* 适配手机字号 */
-        }
-        .button-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.2rem; /* 缩小移动端按钮间距 */
-        }
-        .btn {
-            display: block;
-            padding: 1.2rem 1.5rem;
-            background-color: #2f54eb;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 2px 8px rgba(47, 84, 235, 0.15);
-        }
-        .btn:hover {
-            background-color: #1d39c4;
-        }
-        .btn:active {
-            transform: translateY(1px);
-        }
-        /* 苹果手机悬浮返回按钮 */
-        #backBtn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            background-color: #2f54eb;
-            color: white;
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(47, 84, 235, 0.3);
-            z-index: 9999;
-        }
-        #backBtn.show {
-            display: flex;
-        }
-        /* 底部提示文字 */
-        .tips {
-            margin-top: 3rem;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #666;
-        }
-    </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<title>智能填报1.0</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.3s ease-out forwards;
+    }
+    
+    /* 响应式容器 */
+    .app-container {
+      width: 100%;
+      max-width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+    }
+    
+    /* 桌面端：居中显示，限制最大宽度 */
+    @media (min-width: 768px) {
+      .app-container {
+        width: 375px;
+        height: 812px;
+        max-height: 90vh;
+        border-radius: 40px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        border: 8px solid #000;
+      }
+      body {
+        padding: 20px;
+      }
+    }
+    
+    /* 小屏幕手机 */
+    @media (max-width: 374px) {
+      .app-container {
+        border-radius: 0;
+        border: none;
+      }
+    }
+    
+    /* 弹窗样式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin: 20px;
+      max-width: 320px;
+      max-height: 80vh;
+      overflow-y: auto;
+      transform: scale(0.9);
+      transition: transform 0.3s;
+    }
+    
+    .modal-overlay.show .modal-content {
+      transform: scale(1);
+    }
+  </style>
 </head>
-<body>
-<div class="container">
-    <h1>📋 简道云填报统一入口</h1>
-    <div class="button-group">
-        <!-- 👇 替换为你的真实简道云链接，已加 target="_blank" 新窗口打开 -->
-        <a href="https://nocode.pipechina.com.cn/f/693fce1ed8f7f43ade9838c0" target="_blank" class="btn">设备报修填报</a>
-        <a href="https://nocode.pipechina.com.cn/f/693fce1ed8f7f43ade9838c0" target="_blank" class="btn">访客登记填报</a>
-        <a href="https://nocode.pipechina.com.cn/f/693fce1ed8f7f43ade9838c0" target="_blank" class="btn">物资申领填报</a>
-        <a href="https://nocode.pipechina.com.cn/f/693fce1ed8f7f43ade9838c0" target="_blank" class="btn">巡检记录填报</a>
+<body class="bg-slate-100 flex justify-center items-center min-h-screen font-sans">
+<!-- APP Container: 响应式 -->
+<div class="app-container bg-white overflow-hidden relative">
+<!-- Header: 56px -->
+<header class="h-[56px] w-full bg-blue-600 grid grid-cols-[72px_1fr_72px] items-center px-3 shrink-0 absolute top-0 z-20" id="main-header">
+  <div class="w-[72px] flex items-center justify-start">
+    <button id="back-button" class="text-white hidden" onclick="goBack()">
+      <span class="iconify text-2xl" data-icon="heroicons:arrow-left"></span>
+    </button>
+  </div>
+  <h1 class="text-white font-bold tracking-wide text-center truncate px-2 text-[clamp(14px,4vw,18px)]" id="header-title">智能填报1.0</h1>
+  <div class="w-[72px] text-white text-xs text-right whitespace-nowrap" id="beijing-time"></div>
+</header>
+<!-- Main Content: 676px (812-56-80) -->
+<main class="absolute top-[56px] bottom-[80px] w-full overflow-y-auto bg-slate-50 hide-scrollbar" id="main-content">
+  <!-- 页面内容将动态加载到这里 -->
+</main>
+<!-- Tab Bar: 80px -->
+<nav class="h-[80px] w-full bg-white border-t border-slate-100 flex items-center justify-around px-2 absolute bottom-0 z-20">
+<button class="flex flex-col items-center justify-center w-full space-y-1 text-blue-600" id="tab-query" onclick="switchPage('query')">
+<span class="iconify text-2xl" data-icon="heroicons:magnifying-glass-solid"></span>
+<span class="text-[10px] font-medium">查询</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full space-y-1 text-slate-400" id="tab-report" onclick="switchPage('report')">
+<span class="iconify text-2xl" data-icon="heroicons:document-plus"></span>
+<span class="text-[10px] font-medium">上报</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full space-y-1 text-slate-400" id="tab-profile" onclick="switchPage('profile')">
+<span class="iconify text-2xl" data-icon="heroicons:user-solid"></span>
+<span class="text-[10px] font-medium">我的</span>
+</button>
+  </nav>
+</div>
+
+<!-- 首次访问提示弹窗 -->
+<div id="welcome-modal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="text-center mb-4">
+      <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+        <span class="iconify text-blue-600 text-3xl" data-icon="heroicons:information-circle"></span>
+      </div>
+      <h2 class="text-lg font-bold text-slate-800 mb-2">欢迎使用智能填报系统</h2>
     </div>
+    
+    <div class="space-y-3 text-sm text-slate-600 mb-6">
+      <div class="bg-amber-50 border-l-4 border-amber-400 p-3 rounded">
+        <div class="font-semibold text-amber-800 mb-2">重要提示：</div>
+        <ul class="space-y-2 text-xs text-amber-700 leading-relaxed">
+          <li>1. 使用前请先点击 <span class="font-semibold">【去注册】</span> 完善个人信息。</li>
+          <li>2. <span class="font-semibold">个人信息提交成功后系统将返回唯一凭据，请妥善保存。</span>个人信息已维护，请忽略该条提醒。</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="flex gap-3">
+      <button onclick="goToRegister()" class="flex-1 bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors active:scale-95">
+        去注册
+      </button>
+      <button onclick="goToReport()" class="flex-1 bg-slate-200 text-slate-700 py-3 rounded-lg font-medium hover:bg-slate-300 transition-colors active:scale-95">
+        已注册
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+    // 页面映射关系
+    const pageMap = {
+      'query': 'query.html',
+      'report': 'report.html',
+      'profile': 'profile.html'
+    };
+
+    // 当前页面ID
+    let currentPageId = 'query';
+    
+    // 页面历史记录（用于返回功能）
+    let pageHistory = [];
+
+    // 加载页面内容
+    async function loadPage(pageId) {
+      const mainContent = document.getElementById('main-content');
+      const pageFile = pageMap[pageId];
+      
+      if (!pageFile) {
+        console.error('未知的页面ID:', pageId);
+        return;
+      }
+
+      try {
+        // 显示加载状态
+        mainContent.innerHTML = '<div class="flex items-center justify-center h-full"><div class="text-slate-400">加载中...</div></div>';
+        
+        // 加载页面内容
+        const response = await fetch(pageFile);
+        if (!response.ok) {
+          throw new Error(`加载页面失败: ${response.status}`);
+        }
+        
+        const html = await response.text();
+        mainContent.innerHTML = html;
+        
+        // 初始化Iconify图标（如果页面中包含）
+        // 等待Iconify库加载完成后再扫描
+        if (typeof Iconify !== 'undefined' && Iconify.scan) {
+          Iconify.scan(mainContent);
+        } else {
+          // 如果Iconify还未加载，等待一下再扫描
+          setTimeout(() => {
+            if (typeof Iconify !== 'undefined' && Iconify.scan) {
+              Iconify.scan(mainContent);
+            }
+          }, 100);
+        }
+        
+        // 添加动画效果
+        const pageElement = mainContent.querySelector('section');
+        if (pageElement) {
+          pageElement.classList.add('animate-slide-in');
+        }
+        
+        currentPageId = pageId;
+      } catch (error) {
+        console.error('加载页面时出错:', error);
+        mainContent.innerHTML = `<div class="flex items-center justify-center h-full"><div class="text-red-400">加载失败: ${error.message}</div></div>`;
+      }
+    }
+
+    // 切换页面
+    function switchPage(pageId) {
+      // 保存当前页面到历史记录（如果当前不是嵌入页面）
+      if (currentPageId !== 'embed') {
+        pageHistory.push({
+          pageId: currentPageId,
+          html: document.getElementById('main-content').innerHTML
+        });
+      }
+      
+      // 重置所有标签颜色
+      const tabs = ['query', 'report', 'profile'];
+      tabs.forEach(t => {
+        const tabEl = document.getElementById(`tab-${t}`);
+        tabEl.classList.remove('text-blue-600');
+        tabEl.classList.add('text-slate-400');
+      });
+
+      // 设置活动标签颜色
+      const activeTab = document.getElementById(`tab-${pageId}`);
+      if (activeTab) {
+        activeTab.classList.remove('text-slate-400');
+        activeTab.classList.add('text-blue-600');
+      }
+
+      // 隐藏返回按钮
+      document.getElementById('back-button').classList.add('hidden');
+      document.getElementById('header-title').textContent = '智能填报1.0';
+
+      // 加载页面内容
+      loadPage(pageId);
+    }
+
+    // 嵌入页面函数（在当前页面内显示iframe）
+    function navigateToPage(url) {
+      // 保存当前页面到历史记录
+      if (currentPageId !== 'embed') {
+        pageHistory.push({
+          pageId: currentPageId,
+          html: document.getElementById('main-content').innerHTML
+        });
+      }
+      
+      const mainContent = document.getElementById('main-content');
+      const backButton = document.getElementById('back-button');
+      const headerTitle = document.getElementById('header-title');
+      
+      // 隐藏底部导航栏（可选，如果需要的话可以取消注释）
+      // document.querySelector('nav').style.display = 'none';
+      
+      // 显示返回按钮
+      backButton.classList.remove('hidden');
+      
+      // 更新标题（可以自定义）
+      headerTitle.textContent = '功能页面';
+      
+      // 获取主内容区域的实际高度
+      const headerHeight = 56;
+      const navHeight = 80;
+      const contentHeight = window.innerHeight - headerHeight - navHeight;
+      
+      // 创建iframe嵌入内容
+      mainContent.innerHTML = `
+        <div style="width: 100%; height: 100%; position: relative; min-height: ${contentHeight}px;">
+          <iframe width="100%" height="100%" style="position: absolute; border: none;" src="${url}"></iframe>
+        </div>
+      `;
+      
+      currentPageId = 'embed';
+    }
+    
+    // 返回上一页
+    function goBack() {
+      if (pageHistory.length > 0) {
+        const previousPage = pageHistory.pop();
+        const mainContent = document.getElementById('main-content');
+        const backButton = document.getElementById('back-button');
+        const headerTitle = document.getElementById('header-title');
+        
+        // 恢复之前的内容
+        mainContent.innerHTML = previousPage.html;
+        currentPageId = previousPage.pageId;
+        
+        // 隐藏返回按钮
+        backButton.classList.add('hidden');
+        headerTitle.textContent = '智能填报1.0';
+        
+        // 恢复Iconify图标
+        if (typeof Iconify !== 'undefined' && Iconify.scan) {
+          Iconify.scan(mainContent);
+        }
+      }
+    }
+
+    // 过滤功能列表（根据应用名称模糊匹配）
+    function filterFunctions(pageType, searchText) {
+      const container = document.getElementById(`functions-container-${pageType}`);
+      const resetBtn = document.getElementById(`reset-btn-${pageType}`);
+      const functionItems = container ? container.querySelectorAll('.function-item') : [];
+      
+      if (!container || functionItems.length === 0) return;
+      
+      const searchValue = searchText.trim().toLowerCase();
+      
+      // 如果有搜索内容，显示重置按钮；否则隐藏
+      if (searchValue.length > 0) {
+        resetBtn.classList.remove('hidden');
+      } else {
+        resetBtn.classList.add('hidden');
+      }
+      
+      // 遍历所有功能项，根据名称进行模糊匹配
+      functionItems.forEach(item => {
+        const functionName = item.getAttribute('data-name') || '';
+        const nameLower = functionName.toLowerCase();
+        
+        if (searchValue.length === 0 || nameLower.includes(searchValue)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+    
+    // 重置搜索
+    function resetSearch(pageType) {
+      const searchInput = document.getElementById(`search-input-${pageType}`);
+      const resetBtn = document.getElementById(`reset-btn-${pageType}`);
+      const container = document.getElementById(`functions-container-${pageType}`);
+      
+      if (searchInput) {
+        searchInput.value = '';
+      }
+      if (resetBtn) {
+        resetBtn.classList.add('hidden');
+      }
+      if (container) {
+        const functionItems = container.querySelectorAll('.function-item');
+        functionItems.forEach(item => {
+          item.style.display = 'flex';
+        });
+      }
+    }
+
+    // 关闭欢迎弹窗
+    function closeWelcomeModal() {
+      const modal = document.getElementById('welcome-modal');
+      modal.classList.remove('show');
+    }
+    
+    // 去注册 - 跳转到个人信息维护页面
+    function goToRegister() {
+      closeWelcomeModal();
+      navigateToPage('https://nocode.pipechina.com.cn/f/696aee6d0881df7547b6679c?embed=true');
+    }
+    
+    // 已注册 - 跳转到上报页面
+    function goToReport() {
+      closeWelcomeModal();
+      switchPage('report');
+    }
+    
+    // 显示欢迎弹窗（每次访问都显示）
+    function showWelcomeModal() {
+      setTimeout(() => {
+        const modal = document.getElementById('welcome-modal');
+        if (modal) {
+          modal.classList.add('show');
+        }
+      }, 300); // 延迟300ms显示，让页面先加载完成
+    }
+
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function() {
+      // 默认加载查询页面
+      switchPage('query');
+      
+      // 检查是否需要显示欢迎弹窗
+      showWelcomeModal();
+    });
+  </script>
+</body>
+</html>
